@@ -1,12 +1,15 @@
 import React from 'react'
 import PokemonThumb from './components/PokemonThumb'
+import { Select } from 'antd';
 
+const { Option } = Select;
 
 const App = () => {
   const [showModal, setShowModal] = React.useState(false)
 
 
   const [allPokemons, setAllPokemons] = React.useState([])
+  const [searchItem, setsearchItem] = React.useState([])
   const [loadMore, setLoadMore] = React.useState('https://pokeapi.co/api/v2/pokemon?limit=20')
 
   const getAllPokemons = async () => {
@@ -25,7 +28,20 @@ const App = () => {
     }
     createPokemonObject(data.results)
   }
+  function sortPokemon(e) {
+    let dupPokemon = [...allPokemons]
+    if (e === "height" || e === "weight") {
+      dupPokemon.sort((a, b) => a[e] - b[e])
+    } else {
+      dupPokemon.sort((a, b) => {
+        if (a["name"] < b["name"]) { return -1; }
+        if (a["name"] > b["name"]) { return 1; }
+        return 0;
+      })
+    }
+    setAllPokemons(dupPokemon)
 
+  }
 
   React.useEffect(() => {
     getAllPokemons()
@@ -34,7 +50,59 @@ const App = () => {
 
   return (
     <div className="app-contaner">
+      <div className='functioanloty'>
+        <div className='search'>
+          <form onSubmit={async (e) => {
+            e.preventDefault(); e.stopPropagation()
 
+            try {
+              const results = await Promise.allSettled(
+                [
+                  fetch(`https://pokeapi.co/api/v2/pokemon/${searchItem.toLocaleLowerCase()}`).then((response) => response.json()),
+                  fetch(`https://pokeapi.co/api/v2/ability/${searchItem.toLocaleLowerCase()}`).then((response) => response.json()),
+
+                ]);
+              let filteredVal = results.filter((e) => {
+                return e.status == "fulfilled"
+              })
+              if (filteredVal[0].value.sprites) {
+                setAllPokemons([filteredVal[0].value]);
+              }
+              else {
+                setAllPokemons([])
+                filteredVal[0].value.pokemon.forEach(async pokemon => {
+                  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.pokemon.name}`)
+                  const data = await res.json()
+                  setAllPokemons(currentList => [...currentList, data])
+                })
+
+              }
+
+            } catch (error) {
+              // console.error(error);
+            }
+
+
+
+
+          }}>
+            <h1>Search</h1>
+            <input value={searchItem} onChange={(e) => {
+              setsearchItem(e.target.value)
+            }}></input>
+            <button type='submit'>Submit</button>
+          </form>
+        </div>
+        <div className='sort'>
+          <h1>Sort</h1>
+          <Select style={{ width: 120 }} onChange={(e) => { sortPokemon(e) }}>
+            <Option value="name">Name</Option>
+            <Option value="height">Height</Option>
+            <Option value="weight">Weight</Option>
+
+          </Select>
+        </div>
+      </div>
 
       <div className="pokemon-container">
         <div className="all-container">

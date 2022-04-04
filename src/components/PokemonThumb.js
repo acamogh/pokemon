@@ -1,7 +1,6 @@
 import React from 'react'
 
-
-const PokemonThumb = ({ data, image, visible, setShowModal }) => {
+const PokemonThumb = ({ data, image }) => {
 
 
 
@@ -10,7 +9,7 @@ const PokemonThumb = ({ data, image, visible, setShowModal }) => {
 
 
     return (
-        <div className={style} onClick={(e) => { e.stopPropagation(); setShowModal(data.id) }}>
+        <div className={style}>
             <img src={image} alt={data.name} />
             <div className="detail-wrapper">
                 <h3>{data.name}</h3>
