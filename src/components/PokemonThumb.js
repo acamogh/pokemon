@@ -1,6 +1,7 @@
 import React from 'react'
+import { Modal } from 'antd';
 
-const PokemonThumb = ({ data, image }) => {
+const PokemonThumb = ({ data, image, visible, setShowModal }) => {
 
 
 
@@ -9,7 +10,7 @@ const PokemonThumb = ({ data, image }) => {
 
 
     return (
-        <div className={style}>
+        <div className={style} onClick={(e) => { e.stopPropagation(); setShowModal(data.id) }}>
             <img src={image} alt={data.name} />
             <div className="detail-wrapper">
                 <h3>{data.name}</h3>
@@ -21,7 +22,20 @@ const PokemonThumb = ({ data, image }) => {
                     })
                 }</ul>
             </div>
+            <Modal footer={null} title={data.name} visible={visible} onCancel={(e) => { e.stopPropagation(); setShowModal(false) }} onOk={(e) => { e.stopPropagation(); setShowModal(false) }}>
+                <p><span style={{ textDecoration: "underline" }}>Base Experience</span>: {data.base_experience}</p>
+                {/* <small>Species:{data.species}</small> */}
+                <p><span style={{ textDecoration: "underline" }}>Forms</span>: {data.forms.map((val, key) => {
+                    return <span key={key}>{val.name}</span>
+                })}</p>
 
+                <p><span style={{ textDecoration: "underline" }}>Moves</span>: {
+                    data.moves.map((val, key) => {
+                        return <span>{val.move.name}, </span>
+                    })
+                }</p>
+
+            </Modal>
         </div>
     )
 }
