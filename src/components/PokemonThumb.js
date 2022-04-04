@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const PokemonThumb = ({ data, image, visible, setShowModal }) => {
 
 

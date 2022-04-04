@@ -35,6 +35,7 @@ const App = () => {
   return (
     <div className="app-contaner">
 
+
       <div className="pokemon-container">
         <div className="all-container">
           {allPokemons.map((pokemonStats, index) =>
@@ -49,7 +50,7 @@ const App = () => {
             />)}
 
         </div>
-
+        <button className="load-more" onClick={() => getAllPokemons()}>Load more</button>
       </div>
     </div >
   );
