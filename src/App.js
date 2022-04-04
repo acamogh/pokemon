@@ -63,7 +63,7 @@ const App = () => {
 
                 ]);
               let filteredVal = results.filter((e) => {
-                return e.status == "fulfilled"
+                return e.status === "fulfilled"
               })
               if (filteredVal[0].value.sprites) {
                 setAllPokemons([filteredVal[0].value]);

@@ -15,3 +15,9 @@ Things that are left out
 ### `Testing as I have not worked`
 
 ### `Option to choose the number of cards`
+
+How to run
+
+### `npm install`
+
+### `npm start`
